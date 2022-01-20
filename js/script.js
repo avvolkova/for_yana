@@ -31,7 +31,10 @@ function changingValue() {
 
 startBtn.addEventListener('click', result);
 
-
+plusBtn.addEventListener('click', () => {
+    const newScreen = screens[0].cloneNode(true);
+    plusBtn.insertAdjacentElement('beforebegin', newScreen);
+})
 
 
 
