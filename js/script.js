@@ -2,8 +2,8 @@ const startBtn = document.getElementById('start');
 const resetBtn = document.getElementById('reset')
 const screen = document.querySelector('.screen');
 const plusBtn = document.querySelector('.screen-btn');
-const itemsPercent = document.querySelectorAll('.other-items.percent');
-const numberPercent = document.querySelectorAll('.other-items.number');
+const range = document.querySelector('.main-controls__range > input');
+const rangeValue = document.querySelector('.range-value');
 
 function costLayout() {
     const selects = document.querySelectorAll('.main-controls__select > select'); // Определяем на странице все селекты
@@ -33,27 +33,33 @@ function costLayout() {
 
 }
 
-function showResult(total, totalCount, totalFullCount, totalCountRollBack = 0) {
+const showResult = (total, totalCount, totalFullCount) => {
     const totalField = document.querySelector('#total');
     const totalCountField = document.querySelector('#total-count');
     const totalCountOtherField = document.querySelector('#total-count-other');
     const totalFullCountField = document.querySelector('#total-full-count');
     const totalCountRollBackField = document.querySelector('#total-count-rollback');
 
-    totalField.value = total;
-    totalCountField.value = totalCount;
-    totalCountOtherField.value = totalFullCount - total;
-    totalFullCountField.value = totalFullCount;
-    totalCountRollBackField.value = totalCountRollBack;
+
+    totalField.value = total ? total : totalField.value;
+    totalCountField.value = totalCount ? totalCount : totalCountField.value;
+    totalCountOtherField.value = totalFullCount ? totalFullCount - total : totalCountOtherField.value;
+    totalFullCountField.value = totalFullCount ? totalFullCount : totalFullCountField.value;
+    totalCountRollBackField.value = totalFullCount + totalFullCount * (Number(range.value) / 100);
 
     resetBtn.style.display = 'block';
+}
+
+const showRollBack = (rollback) => {
+    const totalFullCountField = document.querySelector('#total-full-count');
+    const totalCountRollBackField = document.querySelector('#total-count-rollback');
+    totalCountRollBackField.value = Number(totalFullCountField.value) + Number(totalFullCountField.value) * (rollback / 100);
 }
 
 startBtn.addEventListener('click', costLayout);
 
 plusBtn.addEventListener('click', () => {
     const newScreen = screen.cloneNode(true);
-    console.dir(newScreen.children)
     newScreen.querySelector('input').value = '';
     plusBtn.insertAdjacentElement('beforebegin', newScreen);
 })
@@ -63,4 +69,8 @@ resetBtn.addEventListener('click', () => {
     resetBtn.style.display = 'none';
 })
 
+const changingValue = () => {
+    rangeValue.textContent = `${range.value}%`
+    showRollBack(Number(range.value))
+}
 
